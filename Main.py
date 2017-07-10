@@ -2,6 +2,9 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from flask import session
+from flask import redirect
+from flask import url_for
+
 
 app = Flask(__name__)
 
@@ -30,9 +33,29 @@ def login():
     else:
         return '잘못된 접근'
 
+@app.route('/get_test', methods=['GET'])
+def get_test():
+    if request.method =='GET':
+        if(request.args.get('username')=="ku"
+           and request.args.get('password')=="1234"):
+            return " Welcome " + request.args.get('username')+" !"
+        else:
+            return "로그인 정보가 맞지 않습니다."
+    else:
+        return '잘못된 접근'
+
+@app.route('/logout')
+def logout():
+    session['logged_in']= False
+    session.pop('username', None)
+    return  redirect(url_for("main"))
+
 secret_key = "sampleKey"
 
 app.secret_key = "abc"
+
+
+
 
 if __name__ == "__main__":
     app.run(debug = True, host = '127.0.0.1', port = 5009)
